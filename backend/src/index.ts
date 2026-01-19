@@ -2,13 +2,22 @@ import {WebSocketServer, WebSocket} from "ws";
 const wss = new WebSocketServer({ port: 8080 })
 
 
-interface IncomingMessage {
-  type: "join" | "chat";
-  payload?: {
-    roomId?: string;
-    message?: string;
+interface IncomingOne {
+  type: "join";
+  payload: {
+    roomId: string;
   };
 }
+
+interface IncomingTwo {
+  type: "chat";
+  payload: {
+    message: string;
+  };
+}
+
+
+type IncomingMessage= IncomingOne | IncomingTwo;
 
 
 let rooms: Record<string, Set<WebSocket>> = {};
@@ -23,9 +32,6 @@ wss.on("connection", (socket) => {
             let parsedData = JSON.parse(data.toString()) as IncomingMessage;
             const { type, payload } = parsedData
 
-            if(!type || !payload){
-                return
-            }
 
             if(type === "join" && typeof payload.roomId === "string"){
                 currentRoom = payload.roomId
