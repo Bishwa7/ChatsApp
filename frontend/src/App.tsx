@@ -33,7 +33,7 @@ function App() {
   }
 
   useEffect(()=>{
-    const ws = new WebSocket("ws://localhost:8080")
+    const ws = new WebSocket(import.meta.env.VITE_WS_URL)
     //@ts-ignore
     socketRef.current=ws
 
